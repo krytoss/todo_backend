@@ -20,7 +20,9 @@ app.use(bodyParser.json())
 // ====================================================
 apiRouter.get('/tasks', async (req, res) => {
     try {
-        const result = await db.query('SELECT * FROM tasks');
+        const result = await db.query(
+            'SELECT * FROM tasks ORDER BY CASE when completed is null then 0 ELSE 1 END, completed ASC'
+        );
         res.json(result.rows);
       } catch (err) {
         console.error(err);
