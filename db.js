@@ -11,6 +11,6 @@ const pool = new Pool({
     database:   process.env.DB_NAME
 })
 
-module.export = {
+module.exports = {
     query: (text, params) => pool.query(text, params)
 }
