@@ -13,13 +13,26 @@ app.use(bodyParser.json())
 
 // ROUTES
 // ====================================================
-app.get('/', async (req, res) => {
+app.get('/tasks', async (req, res) => {
     try {
         const result = await db.query('SELECT * FROM tasks');
         res.json(result.rows);
       } catch (err) {
         console.error(err);
         res.status(500).send('Internal Server Error');
+    }
+})
+
+app.post('/tasks', async (req, res) => {
+    try {
+        const result = await db.query(
+            'INSERT INTO tasks (task, added, completed) VALUES ($1, current_date, current_date) RETURNING *',
+            [ req.body.text ]
+        )
+        res.json(result.rows[0])
+    } catch(err) {
+        console.error(err)
+        res.status(500).send('Internal Server Error')
     }
 })
 
