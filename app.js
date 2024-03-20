@@ -3,6 +3,7 @@ const app = express()
 const dotenv = require('dotenv')
 const bodyParser = require('body-parser')
 const cors = require('cors')
+const apiRouter = express.Router()
 
 const db = require('./db')
 
@@ -17,7 +18,7 @@ app.use(bodyParser.json())
 
 // ROUTES
 // ====================================================
-app.get('/tasks', async (req, res) => {
+apiRouter.get('/tasks', async (req, res) => {
     try {
         const result = await db.query('SELECT * FROM tasks');
         res.json(result.rows);
@@ -27,7 +28,7 @@ app.get('/tasks', async (req, res) => {
     }
 })
 
-app.post('/tasks', async (req, res) => {
+apiRouter.post('/tasks', async (req, res) => {
     try {
         const result = await db.query(
             'INSERT INTO tasks (task, added, completed) VALUES ($1, current_date, current_date) RETURNING *',
@@ -40,6 +41,7 @@ app.post('/tasks', async (req, res) => {
     }
 })
 
+app.use('/api', apiRouter)
 
 // STARTING THE SERVER
 // =====================================================
